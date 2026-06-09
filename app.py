@@ -71,7 +71,6 @@ def generate_audio(text, voice="en-US-JennyNeural"):
     return audio_bytes
 
 # ========== 3D MODEL USING THREE.JS ==========
-# We embed a 3D medical device (CT scanner) using Three.js with orbit controls
 threejs_code = """
 <!DOCTYPE html>
 <html>
@@ -114,7 +113,6 @@ threejs_code = """
         🖱️ Interactive 3D Model
     </div>
 
-    <!-- Import Three.js core and add-ons from CDN -->
     <script type="importmap">
         {
             "imports": {
@@ -129,7 +127,6 @@ threejs_code = """
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-        // Scene, Camera, Renderers
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x0a192f);
         scene.fog = new THREE.FogExp2(0x0a192f, 0.008);
@@ -143,7 +140,6 @@ threejs_code = """
         renderer.shadowMap.enabled = true;
         document.body.appendChild(renderer.domElement);
 
-        // CSS2DRenderer for text labels
         const labelRenderer = new CSS2DRenderer();
         labelRenderer.setSize(window.innerWidth, window.innerHeight);
         labelRenderer.domElement.style.position = 'absolute';
@@ -152,7 +148,6 @@ threejs_code = """
         labelRenderer.domElement.style.pointerEvents = 'none';
         document.body.appendChild(labelRenderer.domElement);
 
-        // Controls
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
@@ -162,7 +157,6 @@ threejs_code = """
         controls.enableZoom = true;
         controls.enablePan = true;
 
-        // Lighting
         const ambientLight = new THREE.AmbientLight(0x404060);
         scene.add(ambientLight);
         const mainLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -179,15 +173,12 @@ threejs_code = """
         rimLight.position.set(2, 3, -4);
         scene.add(rimLight);
 
-        // Helper grid
         const gridHelper = new THREE.GridHelper(20, 20, 0x88aaff, 0x335588);
         gridHelper.position.y = -1.2;
         scene.add(gridHelper);
 
-        // Create a medical CT scanner model using basic geometries
         const group = new THREE.Group();
 
-        // Base platform
         const base = new THREE.BoxGeometry(3.5, 0.2, 2.8);
         const baseMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.4, metalness: 0.7 });
         const baseMesh = new THREE.Mesh(base, baseMat);
@@ -196,7 +187,6 @@ threejs_code = """
         baseMesh.receiveShadow = true;
         group.add(baseMesh);
 
-        // Main cylindrical bore (gantry)
         const gantryRing = new THREE.TorusGeometry(1.3, 0.15, 64, 100);
         const ringMat = new THREE.MeshStandardMaterial({ color: 0x88aaff, metalness: 0.8, roughness: 0.2 });
         const ring = new THREE.Mesh(gantryRing, ringMat);
@@ -204,14 +194,12 @@ threejs_code = """
         ring.position.y = 0.3;
         group.add(ring);
 
-        // Inner cylinder (bore)
         const boreCyl = new THREE.CylinderGeometry(0.9, 0.9, 1.8, 32);
         const boreMat = new THREE.MeshStandardMaterial({ color: 0x1a2a4a, emissive: 0x112233, roughness: 0.3 });
         const bore = new THREE.Mesh(boreCyl, boreMat);
         bore.position.y = 0.3;
         group.add(bore);
 
-        // Front rim
         const frontRing = new THREE.TorusGeometry(1.15, 0.08, 64, 100);
         const rimMat = new THREE.MeshStandardMaterial({ color: 0xffaa66, metalness: 0.9 });
         const frontRim = new THREE.Mesh(frontRing, rimMat);
@@ -220,7 +208,6 @@ threejs_code = """
         frontRim.position.y = 0.3;
         group.add(frontRim);
 
-        // Side panels (electronics housing)
         const panelGeo = new THREE.BoxGeometry(1.2, 0.8, 2.2);
         const panelMat = new THREE.MeshStandardMaterial({ color: 0xccccdd, metalness: 0.5 });
         const leftPanel = new THREE.Mesh(panelGeo, panelMat);
@@ -232,14 +219,12 @@ threejs_code = """
         rightPanel.castShadow = true;
         group.add(rightPanel);
 
-        // Top cover
         const topGeo = new THREE.BoxGeometry(2.2, 0.2, 1.6);
         const topMat = new THREE.MeshStandardMaterial({ color: 0xaaccff, metalness: 0.6 });
         const topCover = new THREE.Mesh(topGeo, topMat);
         topCover.position.set(0, 0.9, 0.2);
         group.add(topCover);
 
-        // Detector ring detail
         const detectorRing = new THREE.TorusGeometry(1.0, 0.05, 32, 80);
         const detMat = new THREE.MeshStandardMaterial({ color: 0x44aaff, emissive: 0x004466 });
         const detRing = new THREE.Mesh(detectorRing, detMat);
@@ -250,7 +235,6 @@ threejs_code = """
 
         scene.add(group);
 
-        // Add CSS2D text labels
         function makeLabel(text, color, position) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -273,16 +257,14 @@ threejs_code = """
         makeLabel('Patient Bore', '#88aaff', new THREE.Vector3(0, 0.8, 1.2));
         makeLabel('Control Panel', '#ffaa88', new THREE.Vector3(2.1, -0.3, 0.8));
 
-        // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-            controls.update(); // update orbit controls
+            controls.update();
             renderer.render(scene, camera);
             labelRenderer.render(scene, camera);
         }
         animate();
 
-        // Handle window resize
         window.addEventListener('resize', onWindowResize, false);
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -303,7 +285,7 @@ st.components.v1.html(threejs_code, height=500, scrolling=False)
 
 # AI Voice Explanation
 st.subheader("🎙️ AI Voice Narration")
-voice_text = """This is a high‑fidelity 3D visualization of a medical CT scanner. The scanner uses X‑rays to create detailed cross‑sectional images of the body. Key components include the X‑ray source, detector array, and the patient bore. This model can be rotated, zoomed, and panned. High‑quality technical visualizations like this are used for sales presentations, training materials, and marketing to clearly demonstrate how complex equipment works. Industrial3D specializes in creating such visualizations for medical devices and industrial machinery."""
+voice_text = """This is a high‑fidelity 3D visualization of a medical CT scanner. The scanner uses X‑rays to create detailed cross‑sectional images of the body. Key components include the X‑ray source, detector array, and the patient bore. This model can be rotated, zoomed, and panned. High‑quality technical visualizations like this are used for sales presentations, training materials, and marketing to clearly demonstrate how complex equipment works. Industrial3D specializes in creating such visualizations for medical devices and industrial machinery. This software was built by Gesner Deslandes, Engineer‑in‑Chief at GlobalInternet.py."""
 
 if st.button("🔊 Hear AI Explanation (Female Voice)", use_container_width=True):
     with st.spinner("Generating voice narration..."):
