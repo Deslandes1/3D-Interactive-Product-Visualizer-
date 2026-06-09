@@ -12,7 +12,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# ========== CUSTOM CSS ==========
 st.markdown("""
 <style>
     .stApp {
@@ -42,7 +41,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ========== LOGO / BRANDING ==========
 st.sidebar.image("https://img.icons8.com/fluency/96/null/3d-printer.png", width=80)
 st.sidebar.markdown("## **GlobalInternet.py**")
 st.sidebar.markdown("**Industrial3D Demo**")
@@ -53,7 +51,6 @@ st.sidebar.markdown("✉️ deslandes78@gmail.com")
 st.sidebar.markdown("---")
 st.sidebar.caption("© 2026 GlobalInternet.py")
 
-# ========== AI VOICE GENERATION FUNCTION ==========
 async def text_to_speech(text, voice, output_path):
     comm = edge_tts.Communicate(text, voice)
     await comm.save(output_path)
@@ -70,7 +67,6 @@ def generate_audio(text, voice="en-US-JennyNeural"):
     os.unlink(tmp_path)
     return audio_bytes
 
-# ========== 3D MODEL USING THREE.JS ==========
 threejs_code = """
 <!DOCTYPE html>
 <html>
@@ -107,7 +103,7 @@ threejs_code = """
 </head>
 <body>
     <div id="info">
-        <strong>Medical CT Scanner</strong> – Drag to rotate | Right-click to pan | Scroll to zoom
+        <strong>Medical CT Scanner (Generic Demo)</strong> – Drag to rotate | Right-click to pan | Scroll to zoom
     </div>
     <div class="controls-note">
         🖱️ Interactive 3D Model
@@ -277,15 +273,12 @@ threejs_code = """
 </html>
 """
 
-# ========== MAIN PAGE ==========
 st.markdown('<div class="main-title"><h1>🩻 Industrial3D – Medical Device Visualization</h1><p>High‑fidelity 3D interactive model of a CT scanner with AI voice explanation</p></div>', unsafe_allow_html=True)
 
-# Display the 3D viewer
 st.components.v1.html(threejs_code, height=500, scrolling=False)
 
-# AI Voice Explanation
 st.subheader("🎙️ AI Voice Narration")
-voice_text = """This is a high‑fidelity 3D visualization of a medical CT scanner. The scanner uses X‑rays to create detailed cross‑sectional images of the body. Key components include the X‑ray source, detector array, and the patient bore. This model can be rotated, zoomed, and panned. High‑quality technical visualizations like this are used for sales presentations, training materials, and marketing to clearly demonstrate how complex equipment works. Industrial3D specializes in creating such visualizations for medical devices and industrial machinery. This software was built by Gesner Deslandes, Engineer‑in‑Chief at GlobalInternet.py."""
+voice_text = """The 3D CT scanner you see here is a simplified, generic representation. It was created to quickly demonstrate interactive 3D visualization and AI voice integration. It is not a photorealistic replica of any commercial medical device. But the real power of this demo is what we do at GlobalInternet.py: we use AI voice integration to explain any product software – medical devices, industrial machines, SaaS platforms – to customers in any living language, including English, French, Spanish, and Haitian Creole. Imagine your sales, training, or marketing materials speaking directly to your audience in their native language with a natural, professional voice. This is how we at GlobalInternet.py build software for our clients. This is Gesner Deslandes, Engineer‑in‑Chief. See you next time for the rest."""
 
 if st.button("🔊 Hear AI Explanation (Female Voice)", use_container_width=True):
     with st.spinner("Generating voice narration..."):
